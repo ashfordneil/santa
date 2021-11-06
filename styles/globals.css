@@ -1,14 +1,44 @@
+@font-face {
+  font-family: 'Kaisei HarunoUmi';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/Kaisei_HarunoUmi/KaiseiHarunoUmi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Kaisei HarunoUmi';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/Kaisei_HarunoUmi/KaiseiHarunoUmi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/Lobster/Lobster-Regular.ttf) format('truetype');
+}
+
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Kaisei HarunoUmi', serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: Lobster, cursive;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+input,button {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 * {
