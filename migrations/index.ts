@@ -1,10 +1,10 @@
 import Database from 'better-sqlite3';
 
-import CreateUserTable from './CreateUserTable.sql';
+import InitialTables from './InitialTables.sql';
 
 let lazyConn: Database.Database | null = null;
 const MIGRATION_SCRIPTS: string[] = [
-  CreateUserTable
+  InitialTables
 ];
 
 export const getDb = (): Database.Database => {
