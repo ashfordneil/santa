@@ -1,0 +1,11 @@
+.button {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 0.5ch;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+}
+
+.button:active {
+    transform: translate(0, 0.1rem);
+}
