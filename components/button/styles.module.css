@@ -9,3 +9,17 @@
 .button:active {
     transform: translate(0, 0.1rem);
 }
+
+.reset {
+    color: red;
+    border-color: red;
+}
+
+.submit {
+    color: green;
+    border-color: green;
+}
+
+.disabled {
+    opacity: 0.5;
+}

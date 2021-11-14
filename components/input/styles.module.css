@@ -24,3 +24,7 @@
     color: red;
     font-weight: bold;
 }
+
+.readOnly {
+    opacity: 0.5;
+}

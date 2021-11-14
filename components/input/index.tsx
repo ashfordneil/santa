@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { HTMLInputTypeAttribute, useRef, useState } from 'react';
 import styles from './styles.module.css';
 
 const token = Symbol('input');
 
 export interface HookProps {
   readonly validate: (value: string) => string | void;
+  readonly initial?: string;
 }
 
 export interface HookOutput {
@@ -23,14 +24,23 @@ export interface HookOutput {
 }
 
 export interface Props {
+  // Basics of putting together the input
   readonly hook: HookOutput;
+  readonly type: HTMLInputTypeAttribute;
+
+  // User friendliness
   readonly label: string;
   readonly hint: string;
+
+  // Other input attributes, we pass these through basically verbatim
   readonly placeholder?: string;
+  readonly readOnly?: boolean;
+  readonly autoComplete?: string;
+  readonly inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
 }
 
 export const useInput = (props: HookProps): HookOutput => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(props.initial ?? '');
   const [message, setMessage] = useState<string | void>();
   const ref = useRef<HTMLInputElement>();
 
@@ -60,19 +70,33 @@ export const useInput = (props: HookProps): HookOutput => {
 export const Input: React.FC<Props> = (props) => {
   const hasError = props.hook.message !== undefined;
 
+  const labelClass = [
+    styles.label,
+    props.readOnly ? styles.readOnly : undefined
+  ].join(' ');
+
   return (
-    <label className={styles.label}>
+    <label className={labelClass}>
       <div className={styles.description}>{props.label}</div>
       <input
-        type="text"
+        type={props.type}
         value={props.hook.value}
         onChange={e => {
           props.hook.setValue(e.target.value);
           props.hook.setMessage(undefined);
         }}
 
-        ref={props.hook.ref}
-        onBlur={props.hook.validate}
+        ref={props.hook.ref as any}
+        onBlur={() => {
+          if (props.hook.value !== '') {
+            props.hook.validate();
+          }
+        }}
+
+        readOnly={props.readOnly}
+        placeholder={props.placeholder}
+        autoComplete={props.autoComplete}
+        inputMode={props.inputMode}
       />
       <div className={hasError ? styles.warning : styles.hint}>
         {hasError ? props.hook.message : props.hint}

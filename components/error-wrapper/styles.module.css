@@ -1,0 +1,15 @@
+
+.error {
+    margin-top: 2rem;
+    padding: 0.5rem 2ch;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid red;
+    border-radius: 1ch;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.error > p {
+    margin-top: 0;
+}
