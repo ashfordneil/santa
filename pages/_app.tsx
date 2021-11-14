@@ -26,7 +26,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             ease: 'linear'
           }}
         >
-          <div style={{ top: '0', position: 'fixed', width: '100vw', maxWidth: '100vw' }}>
+          <div style={{ top: '0', position: 'fixed', width: '100vw', maxWidth: '100vw', height: '100vh', overflowY: 'scroll' }}>
             <Component {...pageProps} />
             <img src="/TransitionSlider.svg" alt="A sleigh pulled by reindeer, to make transitions smoother"
                  style={{
