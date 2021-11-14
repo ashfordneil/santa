@@ -6,7 +6,6 @@ import React from 'react';
 
 import '../styles/globals.css';
 
-
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
@@ -27,9 +26,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             ease: 'linear'
           }}
         >
-          <div style={{ top: '0', position: 'fixed' }}>
+          <div style={{ top: '0', position: 'fixed', width: '100vw', maxWidth: '100vw' }}>
             <Component {...pageProps} />
-            <img src="/TransitionSlider.svg" alt="A sleigh pulled by reindeers, to make transitions smoother"
+            <img src="/TransitionSlider.svg" alt="A sleigh pulled by reindeer, to make transitions smoother"
                  style={{
                    position: 'fixed',
                    bottom: 'calc(100% - 3rem)',

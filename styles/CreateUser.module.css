@@ -3,7 +3,6 @@
     flex-direction: column;
 
     width: 90ch;
-    min-width: 45ch;
     max-width: calc(100% - 2ch);
 
     margin: 0 auto;
