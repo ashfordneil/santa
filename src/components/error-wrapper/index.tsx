@@ -34,9 +34,11 @@ export const ErrorMessage: React.FC<Props> = props => {
         icon={faTimes}
       />
       {detail && (
-        <pre style={{ gridColumn: '1 / 3' }}>
-          {props.error.stack}
-        </pre>
+        <>
+          <pre style={{ gridColumn: '1 / 3' }}>
+            {props.error.stack}
+          </pre>
+        </>
       )}
     </div>
   );

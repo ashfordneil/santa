@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { getDb } from '../migrations';
+import { getDb } from 'migrations';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   getDb();
