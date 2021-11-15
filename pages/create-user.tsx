@@ -2,6 +2,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 
+import { RequestOtpRequest, RequestOtpResponse } from 'boundaries/request-otp';
+import { CreateUserRequest } from 'boundaries/create-user';
 import { ErrorMessage } from 'components/error-wrapper';
 import { Input, useInput } from 'components/input';
 import { Button } from 'components/button';
@@ -23,16 +25,49 @@ const enum FormPhase {
   PhoneVerification
 }
 
-const fetchOtp = async (_data: UserInfo): Promise<string> => {
-  await new Promise((resolve) => setTimeout(resolve, 200));
-  if (Math.random() < 0.5) {
-    throw new Error("The network died lol");
+const fetchOtp = async (data: UserInfo): Promise<string> => {
+  const payload: RequestOtpRequest = {
+    name: data.name,
+    phone: data.phone
+  };
+  const head = await fetch('/api/request-otp', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!head.ok) {
+    const err = new Error('Invalid network response');
+    const text = await head.text().then((value) => value, () => undefined);
+    err.stack = [ `Received a status code of ${head.status} (${head.statusText})`, text, err.stack ].join('\n');
+    throw err;
   }
-  return 'token-me';
+
+  const body = RequestOtpResponse.check(await head.json());
+  return body.token;
 };
 
-const fetchNewUser = async (_data: OtpToken): Promise<string> => {
-  throw new Error('User creation not yet implemented');
+const fetchNewUser = async (data: OtpToken): Promise<void> => {
+  const payload: CreateUserRequest = {
+    token: data.token,
+    otp: data.otp
+  };
+  const head = await fetch('/api/create-user', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!head.ok) {
+    const message = await head.text().then((value) => value, () => 'Invalid network response');
+    const err = new Error(message);
+    err.stack = [ `Received a status code of ${head.status} (${head.statusText})`, err.stack ].join('\n');
+    throw err;
+  }
 };
 
 const CreateUser: React.FC = () => {

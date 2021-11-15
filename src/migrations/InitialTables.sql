@@ -2,15 +2,15 @@ PRAGMA user_version = 1;
 
 CREATE TABLE Users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name STRING NOT NULL,
-    phone_number STRING NOT NULL,
-    wish_list STRING,
+    name TEXT NOT NULL,
+    phone_number TEXT UNIQUE NOT NULL,
+    wish_list TEXT,
     list_last_updated INTEGER
 );
 
 CREATE TABLE GiftExchangeGroup (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name STRING NOT NULL
+    name TEXT NOT NULL
 );
 
 CREATE TABLE GroupMembership (
