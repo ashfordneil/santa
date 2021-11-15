@@ -1,0 +1,27 @@
+
+.normal {
+    transition: transform 3s linear;
+    transform: none;
+    position: relative;
+}
+
+.entering {
+    transform: translate(180vw, 56.4vw);
+}
+
+.exiting {
+    transform: translate(-100%, -31.3vw);
+
+    /* detach the exiting element from the rest of the page, so it doesn't affect flow at all */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.image {
+    position: fixed;
+    bottom: calc(100% - 3rem);
+    right: calc(100% + 2ch);
+    height: 15rem;
+}

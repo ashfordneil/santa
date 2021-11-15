@@ -1,45 +1,52 @@
-import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import React from 'react';
+import { AnimatePresence, usePresence } from 'framer-motion';
 
+import styles from '../styles/Transition.module.css';
 import '../styles/globals.css';
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
-  const router = useRouter();
+const SlidingWrapper = ({ Component, pageProps }: AppProps) => {
+  const [ isNew, setIsNew ] = useState(true);
+  useEffect(() => setIsNew(false), []);
+  const [ isPresent, safeToRemove ] = usePresence();
 
+  const classes = [
+    styles.normal,
+    isNew ? styles.entering : undefined,
+    isPresent ? undefined : styles.exiting
+  ].join(' ');
+
+  const onComplete = () => {
+    if (safeToRemove) {
+      safeToRemove();
+    }
+  }
+
+  return (
+    <div
+      className={classes}
+      onTransitionEnd={onComplete}
+    >
+      <img
+        src="/TransitionSlider.svg"
+        alt="A sleigh pulled by reindeer, to make transitions smoother"
+        className={styles.image}
+      />
+      <Component {...pageProps} />
+    </div>
+  );
+};
+
+const MyApp = ({ Component, pageProps, router }: AppProps) => {
   return <>
     <Head>
       <title>Secret Santa</title>
       <link rel="icon" href="/Icon.png"/>
     </Head>
-    <LazyMotion features={domAnimation}>
-      <AnimatePresence>
-        <m.div
-          key={router.route}
-          initial={{ x: '180vw', y: '56.4vw' }}
-          animate={{ x: '0', y: 0 }}
-          exit={{ x: '-100%', y: '-31.3vw' }}
-          transition={{
-            duration: 3,
-            ease: 'linear'
-          }}
-        >
-          <div style={{ top: '0', position: 'fixed', width: '100vw', maxWidth: '100vw', height: '100vh', overflowY: 'scroll' }}>
-            <Component {...pageProps} />
-            <img src="/TransitionSlider.svg" alt="A sleigh pulled by reindeer, to make transitions smoother"
-                 style={{
-                   position: 'fixed',
-                   bottom: 'calc(100% - 3rem)',
-                   right: 'calc(100% + 2ch)',
-                   height: '15rem'
-                 }}
-            />
-          </div>
-        </m.div>
-      </AnimatePresence>
-    </LazyMotion>
+    <AnimatePresence>
+      <SlidingWrapper key={router.route} pageProps={pageProps} Component={Component} router={router} />
+    </AnimatePresence>
   </>;
 };
 
