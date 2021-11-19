@@ -1,6 +1,7 @@
 import React from 'react';
 import { withIronSessionSsr } from 'iron-session/next';
 import { InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 
 import { IronConfig } from 'config';
 import { getDb } from 'migrations';
@@ -8,7 +9,7 @@ import { getDb } from 'migrations';
 export const getServerSideProps = withIronSessionSsr(async (ctx) => {
   const user = ctx.req.session.id;
   if (user === undefined) {
-    return { redirect: { destination: '/create-user', permanent: false } };
+    return { redirect: { destination: '/login', permanent: false } };
   }
 
   const db = getDb();
@@ -18,7 +19,8 @@ export const getServerSideProps = withIronSessionSsr(async (ctx) => {
 
 const Home: React.FC<InferGetServerSidePropsType<typeof getServerSideProps>> = props => (
   <main>
-    <h1>Welcome to secret santa, {props.name}</h1>
+    <h1>Welcome to Secret Santa, {props.name}</h1>
+    <p>Are you not {props.name}? Click <Link href='/logout'>here to log out</Link></p>
   </main>
 );
 

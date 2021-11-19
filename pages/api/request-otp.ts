@@ -17,7 +17,7 @@ const generateOtp = (): string => {
 
 const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string | RequestOtpResponse>) => {
   if (req.session.id !== undefined) {
-    res.status(403).send('Already logged in');
+    res.status(403).setHeader('content-type', 'text/plain; charset=UTF-8').send('Already logged in');
     return;
   }
 
@@ -32,9 +32,9 @@ const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string | 
   }
 
   const desiredOtp = generateOtp();
-  console.log(`Tell ${req.body.name} that their OTP is ${desiredOtp}`);
+  console.log(`Tell the owner of ${req.body.phone} that their OTP is ${desiredOtp}`);
 
-  const token = await seal({ name: req.body.name, phone: req.body.phone, desired_otp: desiredOtp });
+  const token = await seal({ phone: req.body.phone, desired_otp: desiredOtp });
 
   res.status(200).json({ token });
 }, IronConfig);

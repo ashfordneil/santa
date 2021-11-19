@@ -1,13 +1,12 @@
-import { timingSafeEqual } from 'crypto';
 import { withIronSessionApiRoute } from 'iron-session/next';
 import { NextApiResponse } from 'next';
 
 import { IronConfig } from 'config';
-import { CreateUserRequest } from 'boundaries/create-user';
-import { unseal } from 'boundaries/signed-otp-request';
+import { CreateUserRequest, CreateUserResponse } from 'boundaries/create-user';
+import { unseal } from 'boundaries/signed-otp-confirmation';
 import { getDb } from 'migrations';
 
-const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string>) => {
+const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string | CreateUserResponse>) => {
   if (req.session.id !== undefined) {
     res.status(403).send('Already logged in');
     return;
@@ -29,21 +28,16 @@ const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string>) 
     return;
   }
 
-  if (!timingSafeEqual(Buffer.from(decoded.desired_otp, 'hex'), Buffer.from(req.body.otp, 'hex'))) {
-    res.status(400).send('The OTP is incorrect');
-    return;
-  }
-
   const db = getDb();
 
   try {
-    const { id }: { id: number } = db.prepare('INSERT INTO Users (name, phone_number) VALUES (?, ?) RETURNING id').get(decoded.name, decoded.phone);
+    const { id }: { id: number } = db.prepare('INSERT INTO Users (name, phone_number) VALUES (?, ?) RETURNING id').get(req.body.name, decoded.phone);
     req.session.id = id;
     await req.session.save();
 
-    res.status(200).send('Success');
+    res.status(200).send({ success: true });
   } catch (e) {
-    res.status(409).send('A user with this phone number already exists');
+    res.status(200).send({ success: false, reason: 'A user with this phone number already exists' });
   }
 }, IronConfig);
 

@@ -1,9 +1,9 @@
 import { Record, Static, String } from 'runtypes';
 import * as Iron from '@hapi/iron';
-import { getConfig } from '../config';
+
+import { getConfig } from 'config';
 
 const SignedOtpRequest = Record({
-  name: String,
   phone: String,
   desired_otp: String
 });

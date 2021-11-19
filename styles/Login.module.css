@@ -1,0 +1,16 @@
+.form {
+    display: flex;
+    flex-direction: column;
+
+    width: 90ch;
+    max-width: calc(100% - 2ch);
+
+    margin: 0 auto;
+}
+
+.submitArea {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2ch;
+}
