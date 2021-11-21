@@ -3,8 +3,8 @@ import { Record, Static, String } from 'runtypes';
 
 const ConfigurationSchema = Record({
   DATABASE_PATH: String,
-  COOKIE_PASSWORD: String.withConstraint(pass => pass.length > 32 || 'Password must be at least 32 characters'),
-  SEAL_PASSWORD: String.withConstraint(pass => pass.length > 32 || 'Password must be at least 32 characters')
+  COOKIE_PASSWORD: String.withConstraint(pass => pass.length >= 32 || 'Password must be at least 32 characters'),
+  SEAL_PASSWORD: String.withConstraint(pass => pass.length >= 32 || 'Password must be at least 32 characters')
 });
 
 export type Config = Static<typeof ConfigurationSchema>;

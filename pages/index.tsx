@@ -13,8 +13,12 @@ export const getServerSideProps = withIronSessionSsr(async (ctx) => {
   }
 
   const db = getDb();
-  const { name }: { name: string } = db.prepare('SELECT name FROM Users WHERE id = ?').get(user);
-  return { props: { name } };
+  const result: undefined | { name: string } = db.prepare('SELECT name FROM Users WHERE id = ?').get(user);
+  if (result === undefined) {
+    ctx.req.session.destroy();
+    return { redirect: { destination: '/login', permanent: false } };
+  }
+  return { props: { name: result.name } };
 }, IronConfig);
 
 const Home: React.FC<InferGetServerSidePropsType<typeof getServerSideProps>> = props => (
