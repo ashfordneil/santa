@@ -1,0 +1,19 @@
+
+.page {
+    display: flex;
+    flex-direction: column;
+
+    width: 90ch;
+    max-width: calc(100% - 2ch);
+
+    min-height: calc(100vh - 1rem);
+
+    margin: 0 auto 1rem;
+}
+
+.warning {
+    font-weight: bold;
+    margin-top: 0;
+    margin-left: 2ch;
+    color: red;
+}

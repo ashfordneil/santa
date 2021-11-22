@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from 'date-fns';
 import { GetServerSidePropsResult } from 'next';
 import React from 'react';
 import { withIronSessionSsr } from 'iron-session/next';
@@ -17,6 +18,7 @@ interface Props {
   readonly [key: string]: unknown;
 
   readonly name: string;
+  readonly lastUpdated: number;
   readonly groups: Group[];
 }
 
@@ -27,7 +29,7 @@ export const getServerSideProps = withIronSessionSsr(async (ctx): Promise<GetSer
   }
 
   const db = getDb();
-  const result: undefined | { name: string } = db.prepare('SELECT name FROM Users WHERE id = ?').get(user);
+  const result: undefined | { name: string, list_last_updated: number } = db.prepare('SELECT name, list_last_updated FROM Users WHERE id = ?').get(user);
   if (result === undefined) {
     ctx.req.session.destroy();
     return { redirect: { destination: '/login', permanent: false } };
@@ -37,7 +39,7 @@ export const getServerSideProps = withIronSessionSsr(async (ctx): Promise<GetSer
     'SELECT GiftExchangeGroup.name, GiftExchangeGroup.id FROM GiftExchangeGroup, GroupMembership WHERE GroupMembership.user = ? AND GroupMembership.gift_exchange_group = GiftExchangeGroup.id'
   ).all(user);
 
-  return { props: { name: result.name, groups } };
+  return { props: { name: result.name, lastUpdated: result.list_last_updated, groups } };
 }, IronConfig);
 
 const Home: React.FC<Props> = props => {
@@ -61,6 +63,7 @@ const Home: React.FC<Props> = props => {
       <h1>Welcome to Secret Santa, {props.name}</h1>
       <p className={styles.warning}>Are you not {props.name}? Click <Link href="/logout">here to log out!</Link></p>
       {showGroups}
+      <p>It has been {formatDistanceToNow(new Date(props.lastUpdated))} since you last edited your Wish List. Click <Link href="/wish-list">here to tell your Secret Santa what you want!</Link></p>
     </main>
   );
 };
