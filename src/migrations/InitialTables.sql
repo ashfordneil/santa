@@ -10,7 +10,8 @@ CREATE TABLE Users (
 
 CREATE TABLE GiftExchangeGroup (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    current_year INTEGER
 );
 
 CREATE TABLE GroupMembership (

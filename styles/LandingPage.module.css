@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    flex-direction: column;
+
+    width: 90ch;
+    max-width: calc(100% - 2ch);
+
+    margin: 0 auto;
+}
+
+.warning {
+    font-weight: bold;
+    margin-top: 0;
+    margin-left: 2ch;
+    color: red;
+}
