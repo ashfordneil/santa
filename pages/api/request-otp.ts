@@ -3,9 +3,10 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import { NextApiResponse } from 'next';
 import { randomInt } from 'crypto';
 
-import { IronConfig } from 'config';
+import { getConfig, IronConfig } from 'config';
 import { seal } from 'boundaries/signed-otp-request';
 import { RequestOtpRequest, RequestOtpResponse } from 'boundaries/request-otp';
+import twilio from 'twilio';
 
 const generateOtp = (): string => {
   const output = [];
@@ -15,6 +16,9 @@ const generateOtp = (): string => {
 
   return output.join('');
 };
+
+// Easy switch for debugging
+const REAL_TEXT_MESSAGES = true;
 
 const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string | RequestOtpResponse>) => {
   if (req.session.id !== undefined) {
@@ -35,7 +39,17 @@ const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string | 
   const phone = parsePhoneNumber(req.body.phone, 'AU').formatInternational();
 
   const desiredOtp = generateOtp();
-  console.log(`Tell the owner of ${phone} that their OTP is ${desiredOtp}`);
+
+  const client = twilio(getConfig('TWILIO_ACCOUNT_SID'), getConfig('TWILIO_AUTH_TOKEN'), { lazyLoading: true });
+  if (REAL_TEXT_MESSAGES) {
+    await client.messages.create({
+      from: getConfig('TWILIO_PHONE_NUMBER'),
+      to: phone,
+      body: `Welcome to Secret Santa! Your login code is ${desiredOtp}.`
+    });
+  } else {
+    console.log(`Tell the owner of ${phone} that their OTP is ${desiredOtp}`);
+  }
 
   const token = await seal({ phone, desired_otp: desiredOtp });
 

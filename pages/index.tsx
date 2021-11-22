@@ -52,9 +52,10 @@ const Home: React.FC<Props> = props => {
       <p>You are in the following Secret Santa groups:</p>
       <ul>
         {props.groups.map((group, i) => (
-          <li key={i}>{group.name}</li>
+          <li key={i}><Link href={`/group/${group.id}`}>{group.name}</Link></li>
         ))}
       </ul>
+      <p>Click a group to see who you are buying for in that group</p>
     </>
   );
 
@@ -63,7 +64,11 @@ const Home: React.FC<Props> = props => {
       <h1>Welcome to Secret Santa, {props.name}</h1>
       <p className={styles.warning}>Are you not {props.name}? Click <Link href="/logout">here to log out!</Link></p>
       {showGroups}
-      <p>It has been {formatDistanceToNow(new Date(props.lastUpdated))} since you last edited your Wish List. Click <Link href="/wish-list">here to tell your Secret Santa what you want!</Link></p>
+      {props.lastUpdated !== null ? (
+        <p>It has been {formatDistanceToNow(new Date(props.lastUpdated))} since you last edited your Wish List. Click <Link href="/wish-list">here to tell your Secret Santa what you want!</Link></p>
+      ) : (
+        <p>You have not yet edited your Wish List. Click <Link href="/wish-list">here to tell your Secret Santa what you want!</Link></p>
+      )}
     </main>
   );
 };

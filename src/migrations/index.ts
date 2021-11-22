@@ -19,10 +19,6 @@ export const getDb = (): Database.Database => {
       db.exec(migration);
     });
 
-    if (toApply.length === 0) {
-      console.log('No migrations necessary');
-    }
-
     lazyConn = db;
   }
 
