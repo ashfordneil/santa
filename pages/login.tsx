@@ -1,7 +1,3 @@
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useAsyncCallback } from 'react-async-hook';
-
 import { CreateUserRequest, CreateUserResponse } from 'boundaries/create-user';
 import { RequestOtpRequest, RequestOtpResponse } from 'boundaries/request-otp';
 import { SubmitOtpRequest, SubmitOtpResponse } from 'boundaries/submit-otp';
@@ -11,6 +7,10 @@ import { useInput } from 'components/input';
 import { NameInput } from 'components/input/name';
 import { OtpInput } from 'components/input/otp';
 import { PhoneInput } from 'components/input/phone';
+import { AsYouType, isValidNumberForRegion } from 'libphonenumber-js';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useAsyncCallback } from 'react-async-hook';
 
 import { request } from 'util/request';
 
@@ -26,13 +26,18 @@ const Login: React.FC = () => {
   const [ phase, setPhase ] = useState(Phase.EnteringPhone);
   const router = useRouter();
 
-  const phone = useInput({
+  const phoneRaw = useInput({
     validate: (ph) => {
-      if (!ph.startsWith('04')) {
-        return 'Please enter a valid phone number, starting with 04';
+      if (!isValidNumberForRegion(ph, 'AU')) {
+        return 'Please enter a valid phone number';
       }
     }
   });
+
+  const phone = {
+    ...phoneRaw,
+    value: new AsYouType('AU').input(phoneRaw.value)
+  };
 
   const otp = useInput({
     validate: (otp) => {

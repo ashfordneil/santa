@@ -1,4 +1,5 @@
 import { withIronSessionApiRoute } from 'iron-session/next';
+import { parsePhoneNumber } from 'libphonenumber-js';
 import { NextApiResponse } from 'next';
 import { randomInt } from 'crypto';
 
@@ -31,10 +32,12 @@ const Route = withIronSessionApiRoute(async (req, res: NextApiResponse<string | 
     return;
   }
 
-  const desiredOtp = generateOtp();
-  console.log(`Tell the owner of ${req.body.phone} that their OTP is ${desiredOtp}`);
+  const phone = parsePhoneNumber(req.body.phone, 'AU').formatInternational();
 
-  const token = await seal({ phone: req.body.phone, desired_otp: desiredOtp });
+  const desiredOtp = generateOtp();
+  console.log(`Tell the owner of ${phone} that their OTP is ${desiredOtp}`);
+
+  const token = await seal({ phone, desired_otp: desiredOtp });
 
   res.status(200).json({ token });
 }, IronConfig);
