@@ -81,7 +81,7 @@ const lastYear = (db, group, users) => {
 
   const { last_year } = db.prepare("SELECT max(year) AS last_year FROM Gift WHERE gift_exchange_group = ?").get(group);
   const output = users.map(user => {
-    const pastGifts = db.prepare("SELECT receiver FROM Gift WHERE giver = ? AND year = ?").all(user.id, last_year);
+    const pastGifts = db.prepare("SELECT receiver FROM Gift WHERE giver = ? AND year >= ?").all(user.id, last_year);
     return pastGifts.map(({ receiver }) => indexed.get(receiver)).filter(x => x !== null);
   });
 

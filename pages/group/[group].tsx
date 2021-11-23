@@ -52,11 +52,10 @@ export const getServerSideProps = withIronSessionSsr(async (ctx): Promise<GetSer
   const buyingFor: undefined | { name: string, wish_list: string | null, list_last_updated: number | null } = db.prepare(
     `SELECT u1.name, u1.wish_list, u1.list_last_updated
      FROM Users as u1
-              INNER JOIN Gift ON Gift.receiver = u1.id
-     WHERE Gift.giver = ?
-       AND Gift.year = ?
+     INNER JOIN Gift ON Gift.receiver = u1.id
+     WHERE Gift.giver = ? AND Gift.year = ? AND Gift.gift_exchange_group = ?
      LIMIT 1`
-  ).get(user, groupInfo.current_year);
+  ).get(user, groupInfo.current_year, group);
 
   if (buyingFor === undefined) {
     console.warn(`User ${user} unable to find who they are buying for in group ${groupInfo.name} (year ${groupInfo.current_year})`);
