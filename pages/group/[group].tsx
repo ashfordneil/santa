@@ -93,7 +93,6 @@ const Body: React.FC<Props> = props => {
   }
 
   const date = new Date(props.buyingFor.lastUpdated);
-  date.setMonth(4);
   const distance = formatDistanceToNow(date);
 
   return (
