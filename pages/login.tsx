@@ -7,7 +7,7 @@ import { useInput } from 'components/input';
 import { NameInput } from 'components/input/name';
 import { OtpInput } from 'components/input/otp';
 import { PhoneInput } from 'components/input/phone';
-import { AsYouType, isValidNumberForRegion } from 'libphonenumber-js';
+import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
 
   const phoneRaw = useInput({
     validate: (ph) => {
-      if (!isValidNumberForRegion(ph, 'AU')) {
+      if (!isValidPhoneNumber(ph, 'AU')) {
         return 'Please enter a valid phone number';
       }
     }

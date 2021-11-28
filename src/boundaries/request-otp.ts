@@ -1,8 +1,8 @@
-import { isValidNumberForRegion } from 'libphonenumber-js';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import { Record, Static, String } from 'runtypes';
 
 export const RequestOtpRequest = Record({
-  phone: String.withConstraint((ph) => isValidNumberForRegion(ph, 'AU'))
+  phone: String.withConstraint((ph) => isValidPhoneNumber(ph, 'AU'))
 });
 
 export type RequestOtpRequest = Static<typeof RequestOtpRequest>;
